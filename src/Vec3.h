@@ -7,46 +7,46 @@
 
 class Vec3{
 public:
-    Vec3():m_e{0,0,0}{}
-    Vec3(double e0,double e1,double e2):m_e{e0,e1,e2}{}
-    double x() const{return m_e[0];}
-    double y() const{return m_e[1];}
-    double z() const{return m_e[2];}
+    Vec3():e{0,0,0}{}
+    Vec3(double e0,double e1,double e2):e{e0,e1,e2}{}
+    double x() const{return e[0];}
+    double y() const{return e[1];}
+    double z() const{return e[2];}
 
-    Vec3 operator-() const{return Vec3(-m_e[0],-m_e[1],-m_e[2]);}
-    double operator[](int i) const{return m_e[i];}
-    double& operator[](int i){return m_e[i];}
+    Vec3 operator-() const{return Vec3(-e[0],-e[1],-e[2]);}
+    double operator[](int i) const{return e[i];}
+    double& operator[](int i){return e[i];}
 
     Vec3& operator+=(const Vec3 &rhs){
-        m_e[0]+=rhs[0];
-        m_e[1]+=rhs[1];
-        m_e[2]+=rhs[2];
+        e[0]+=rhs[0];
+        e[1]+=rhs[1];
+        e[2]+=rhs[2];
         return *this;
     }
 
     Vec3& operator-=(const Vec3 &rhs){
-        m_e[0]-=rhs[0];
-        m_e[1]-=rhs[1];
-        m_e[2]-=rhs[2];
+        e[0]-=rhs[0];
+        e[1]-=rhs[1];
+        e[2]-=rhs[2];
         return *this;
     }
 
     Vec3& operator*=(const double &rhs){
-        m_e[0]*=rhs;
-        m_e[1]*=rhs;
-        m_e[2]*=rhs;
+        e[0]*=rhs;
+        e[1]*=rhs;
+        e[2]*=rhs;
         return *this;
     }
 
     Vec3& operator/=(const double &rhs){
-        m_e[0]/=rhs;
-        m_e[1]/=rhs;
-        m_e[2]/=rhs;
+        e[0]/=rhs;
+        e[1]/=rhs;
+        e[2]/=rhs;
         return *this;
     }
 
     double length_squared() const{
-        return m_e[0]*m_e[0]+m_e[1]*m_e[1]+m_e[2]*m_e[2];
+        return e[0]*e[0]+e[1]*e[1]+e[2]*e[2];
     }
 
     double length() const{
@@ -55,11 +55,11 @@ public:
 
     Vec3 normalized() const{
         const double vecLength = length();
-        return Vec3(m_e[0]/vecLength,m_e[1]/vecLength,m_e[2]/vecLength);
+        return Vec3(e[0]/vecLength,e[1]/vecLength,e[2]/vecLength);
     }
 
-private:
-    double m_e[3];
+public:
+    double e[3];
 };
 
 using Point3 = Vec3;
@@ -67,7 +67,7 @@ using Color3 = Vec3;
 
 //util functions
 inline std::ostream& operator<<(std::ostream &out,const Vec3 &rhs){
-    return out << '(' << rhs[0] << ','<<rhs[1]<<','<<rhs[2]<< ')';
+    return out << '(' << rhs.e[0] << ','<<rhs.e[1]<<','<<rhs.e[2]<< ')';
 }
 inline Vec3 operator+ (const Vec3 &lhs,const Vec3 &rhs){
     return Vec3(lhs[0]+rhs[0],lhs[1]+rhs[1],lhs[2]+rhs[2]);
