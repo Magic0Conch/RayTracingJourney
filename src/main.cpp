@@ -1,18 +1,14 @@
 #include <iostream>
+#include "RTWeekend.h"
 #include "Color.h"
-#include "Ray.h"
-bool hitSphere(const Point3& center,double radius,const Ray& ray){
-    Vec3 oc = ray.origin()-center;
-    auto a = dot(ray.direction(), ray.direction());
-    auto b = 2*dot(oc, ray.direction());
-    auto c = dot(oc, oc) - radius*radius;
-    auto discriminant = b*b-4*a*c;
-    return discriminant>0;
-}
+#include "Sphere.h"
+#include "HittableList.h"
 
-Color3 rayColor(const Ray& ray){
-    if(hitSphere(Point3(0,0,-1), 0.5, ray)){
-        return Color3(1, 0, 0);
+
+Color3 rayColor(const Ray& ray,const HittableList& world){
+    HitRecord hitRec;
+    if(world.hit(ray, Interval(0,infinity), hitRec)){        
+        return 0.5*(Color3(hitRec.normal)+Color3(1,1,1));
     }
     Vec3 unitDirection = ray.direction().normalized();
     auto t = .5*(unitDirection.y()+1.); //0~1
@@ -37,6 +33,11 @@ int main(){
     auto vertical = Vec3(0,viewportHeight,0);
     auto lowerLeftCorner = origin - horizontal/2 - vertical/2 - Vec3(0,0,focalLength);
 
+    //Construct the world
+    HittableList world;
+    world.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
+    world.add(make_shared<Sphere>(Point3(0,-100.5,-1), 100));
+
     //Render
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
     for (int i = imageHeight-1; i>=0; --i) {
@@ -46,7 +47,7 @@ int main(){
             auto v = double(i)/(imageHeight-1);
             Point3 endPoint = lowerLeftCorner+u*horizontal+v*vertical;
             Ray ray(origin,endPoint-origin);
-            Color3 pixelColor = rayColor(ray);            
+            Color3 pixelColor = rayColor(ray,world);            
             writeColor(std::cout, pixelColor);
         }
     }
