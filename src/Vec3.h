@@ -1,10 +1,12 @@
+#pragma once
 #ifndef VEC3_H
 #define VEC3_H
-
 #include <cmath>
 #include <iostream>
 #include <ostream>
 
+extern double randomDouble();
+extern double randomDouble(double,double);
 class Vec3{
 public:
     Vec3():e{0,0,0}{}
@@ -58,6 +60,13 @@ public:
         return Vec3(e[0]/vecLength,e[1]/vecLength,e[2]/vecLength);
     }
 
+    static Vec3 random(){
+        return Vec3(randomDouble(),randomDouble(),randomDouble());
+    }
+
+    static Vec3 random(double min,double max){
+        return Vec3(randomDouble(min,max),randomDouble(min,max),randomDouble(min,max));
+    }
 public:
     double e[3];
 };

@@ -3,7 +3,7 @@
 #include <limits>
 
 // #include "RTWeekend.h"
-const double infinity = std::numeric_limits<double>::infinity();
+extern const double infinity;
 class Interval{
 public:
     double min,max;
@@ -15,6 +15,12 @@ public:
 
     bool surrounds(double x) const{
         return min<x && x<max;
+    }
+
+    double clamp(double x) const{
+        if(x<min) return min;
+        if(x>max) return max;
+        return x;
     }
 
     static const Interval empty,universe;
