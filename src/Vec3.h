@@ -67,6 +67,11 @@ public:
     static Vec3 random(double min,double max){
         return Vec3(randomDouble(min,max),randomDouble(min,max),randomDouble(min,max));
     }
+
+    bool nearZero() const{
+        auto s = 1e-8;
+        return fabs(e[0])<s&&fabs(e[1])<s&&fabs(e[2])<s;
+    }
 public:
     double e[3];
 };
@@ -115,4 +120,31 @@ inline Vec3 cross(const Vec3 &lhs,const Vec3 &rhs){
 inline Vec3 unit_vector(Vec3 v) {
     return v / v.length();
 }
+
+inline Vec3 randomInUnitSphere(){
+    while (true) {
+        auto p = Vec3::random(-1,1);
+        if(p.length_squared()<1)
+            return p;
+    }
+}
+
+inline Vec3 randomUnitVector(){
+    return randomInUnitSphere().normalized();
+}
+
+inline Vec3 randomOnHemisphere(const Vec3& normal){
+    auto unitVector = randomUnitVector();
+    if(dot(unitVector, normal)>0.0){
+        return unitVector;
+    }
+    else{
+        return -unitVector;
+    }
+}
+
+inline Vec3 reflect(const Vec3& v,const Vec3& n){
+    return v-2*dot(v, n)*n;
+}
+
 #endif

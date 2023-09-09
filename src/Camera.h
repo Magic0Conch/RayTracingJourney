@@ -3,6 +3,7 @@
 #include "RTWeekend.h"
 #include "Color.h"
 #include "Hittable.h"
+#include "Material.h"
 
 class Camera{
 private:
@@ -32,10 +33,18 @@ private:
 
     }
 
-    Color3 rayColor(const Ray& ray,const Hittable& world) const{
+    Color3 rayColor(const Ray& ray,const int depth,const Hittable& world) const{
         HitRecord hitRec;
-        if(world.hit(ray, Interval(0,infinity), hitRec)){        
-            return 0.5*(Color3(hitRec.normal)+Color3(1,1,1));
+        if(depth<=0)
+            return Color3(0,0,0);
+        if(world.hit(ray, Interval(0.0001,infinity), hitRec)){
+            Ray scattered;
+            Color3 attenuation;
+            if (hitRec.material->scatter(ray, hitRec,attenuation,scattered)) {            
+                return attenuation*rayColor(scattered,depth-1, world);
+            }
+            return Color3(0,0,0);
+
         }
         Vec3 unitDirection = ray.direction().normalized();
         auto t = .5*(unitDirection.y()+1.); //0~1
@@ -59,6 +68,7 @@ public:
     double aspectRatio = 1.0;
     int imageWidth = 100;
     int samplesPerPixel = 10;
+    int maxDepth = 10;
 
     void render(const Hittable& world){
         initialize();
@@ -71,7 +81,7 @@ public:
                 Color3 pixelColor(0,0,0);
                 for (int sample = 0; sample<samplesPerPixel; ++sample) {
                     Ray ray = getRay(i, j);
-                    pixelColor+=rayColor(ray, world);
+                    pixelColor+=rayColor(ray,maxDepth, world);
                 }                
                 writeColor(std::cout, pixelColor,samplesPerPixel);
             }
