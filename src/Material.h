@@ -46,5 +46,25 @@ private:
     Color3 m_albedo;
     double m_fuzz;
 };
+
+class Dielectric:public Material{
+public:
+    Dielectric(double indexOfRefraction):m_indexOfRefraction(indexOfRefraction){};
+    
+    bool scatter(const Ray& r_in,const HitRecord& rec,Color3& attenuation,Ray& scattered) const override{
+        attenuation = Vec3(1,1,1);
+        double refractionRatio = rec.frontFace?(1.0/m_indexOfRefraction):m_indexOfRefraction;
+
+
+        Vec3 refracted = refract(r_in.direction().normalized(), rec.normal,refractionRatio);
+        scattered = Ray(rec.p,refracted);
+        return true;
+    }
+
+private:
+    double m_indexOfRefraction;
+};
+
+
 #endif
 
