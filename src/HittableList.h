@@ -2,7 +2,6 @@
 #define HITTABLE_LIST_H
 
 #include "Hittable.h"
-
 #include <memory>
 #include <vector>
 
@@ -15,7 +14,8 @@ public:
 
     HittableList() = default;
     HittableList(shared_ptr<Hittable> object){
-
+        objects.emplace_back(object);
+        m_bbox = object->boundingBox();
     }
 
     void clear(){
@@ -24,6 +24,7 @@ public:
 
     void add(shared_ptr<Hittable> object){
         objects.emplace_back(object);
+        m_bbox = AABB(m_bbox,object->boundingBox());
     }
 
     bool hit(const Ray& ray,const Interval ray_t,HitRecord& record) const override{
@@ -39,6 +40,12 @@ public:
         }
         return hitAnything;
     }
+
+    virtual AABB boundingBox() const override{
+        return m_bbox;
+    };
+private:
+    AABB m_bbox;
 };
 
 #endif
