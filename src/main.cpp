@@ -392,7 +392,7 @@ int main(){
         case 6: simpleLight();break;
         case 7: cornellBox();break;
         case 8: cornellSmoke();break;
-        case 9: finalScene(800, 1000, 40); break;
+        case 9: finalScene(800, 10000, 40); break;
         default: finalScene(400, 250, 6); break;
     }
 
